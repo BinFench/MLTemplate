@@ -1,6 +1,11 @@
+import numpy
 from numpy import loadtxt
 from keras.models import Sequential
 from keras.layers import Dense
+from keras.models import model_from_json
+import os
+
+numpy.random.seed(7)
 
 dataset = loadtxt('../data/pima-indians-diabetes.data.txt', delimiter=',')
 x = dataset[:,0:8]
@@ -24,3 +29,10 @@ print('Accuracy: %.2f' % (accuracy*100))
 predictions = model.predict_classes(x)
 for i in range(5):
 	print('%s => %d (expected %d)' % (x[i].tolist(), predictions[i], y[i]))
+
+model_json = model.to_json()
+with open("../model/model.json", "w") as json_file:
+    json_file.write(model_json)
+	
+model.save_weights("../model/model.h5")
+print("Saved model to disk")
